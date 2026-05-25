@@ -1,0 +1,6 @@
+@BhumiVox_HostAddress = http://localhost:5283
+
+GET {{BhumiVox_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
