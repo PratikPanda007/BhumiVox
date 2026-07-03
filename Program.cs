@@ -1,18 +1,101 @@
+﻿using BhumiVox.Helper;
+using BhumiVox.Services;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
+
+// ===================== JWT =====================
+var jwtSection = builder.Configuration.GetSection("Jwt");
+var jwtKey = Encoding.UTF8.GetBytes(jwtSection["Key"]);
+
+// ===================== SERVICES =====================
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// 🔹 Your DB Helper
+builder.Services.AddScoped<DBUtils>();
+
+// 🔹 Future services (optional)
+builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<JwtHelper>();
 
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient();
 
-builder.Services.AddCors(options =>
+// ===================== SWAGGER =====================
+
+builder.Services.AddSwaggerGen(c =>
 {
-    options.AddPolicy("AllowReact", policy =>
-        policy.AllowAnyOrigin()
-              .AllowAnyHeader()
-              .AllowAnyMethod());
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BhumiVox API", Version = "v1" });
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Enter: Bearer {your_token}"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
 });
+
+// ===================== AUTH =====================
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false;
+    options.SaveToken = true;
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = jwtSection["Issuer"],
+        ValidAudience = jwtSection["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
+
+        ClockSkew = TimeSpan.Zero // 🔥 important
+    };
+});
+
+builder.Services.AddAuthorization();
+
+// ===================== CORS =====================
+
+builder.Services.AddCors(o =>
+    o.AddPolicy("AllowReact", p =>
+        p.AllowAnyOrigin()
+         .AllowAnyHeader()
+         .AllowAnyMethod()
+    )
+);
+
+// ===================== APP =====================
 
 var app = builder.Build();
 
@@ -22,13 +105,18 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-app.UseDefaultFiles();   // looks for index.html
-app.UseStaticFiles();    // serves wwwroot
-
+// Static files (optional React hosting)
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
+
 app.UseCors("AllowReact");
+
+// 🔐 AUTH (NO API KEY MIDDLEWARE)
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.MapFallbackToFile("index.html");

@@ -30,12 +30,7 @@ export default function WhyPage() {
 
       <Section>
         <div className="grid gap-16 lg:grid-cols-[1fr_1.4fr] lg:gap-24">
-          <img
-            src={chandruImg}
-            alt="Chandru Ramesh"
-            loading="lazy"
-            className="aspect-[4/5] w-full object-cover grayscale-[0.1]"
-          />
+          <img src={chandruImg} alt="Chandru Ramesh" loading="lazy" className="aspect-[4/5] w-full object-cover grayscale-[0.1]" />
           <div>
             <p className="eyebrow">Who is Chandru Ramesh</p>
             <h2 className="mt-5 font-serif text-4xl leading-tight text-ivory md:text-5xl">
@@ -43,9 +38,10 @@ export default function WhyPage() {
               <span className="italic text-primary"> storyteller of its civilization.</span>
             </h2>
             <p className="mt-8 text-base leading-relaxed text-ivory/85 md:text-lg">
-              Chandru has spent two decades reading Bharat as one continuous manuscript — from the
-              granite temples of Tamil Nadu to the paleo-channels of the Saraswati. He brings to
-              every journey a working historian's discipline and a storyteller's cadence.
+              Chandru has spent two decades reading Bharat as one continuous manuscript —
+              from the granite temples of Tamil Nadu to the paleo-channels of the Saraswati.
+              He brings to every journey a working historian's discipline and a storyteller's
+              cadence.
             </p>
             <div className="hairline my-10" />
             <ul className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -70,44 +66,22 @@ export default function WhyPage() {
         <Section>
           <SectionLabel
             eyebrow="The Difference"
-            title={
-              <>
-                Normal tourism <span className="italic text-primary">vs Bhumivox.</span>
-              </>
-            }
+            title={<>Normal tourism <span className="italic text-primary">vs Bhumivox.</span></>}
           />
           <div className="mt-12 grid gap-px bg-border/60 md:grid-cols-2">
             <div className="bg-obsidian p-10">
               <span className="eyebrow text-muted-foreground">Normal Tourism</span>
               <ul className="mt-6 space-y-4 text-sm text-muted-foreground">
-                {[
-                  "Bus circuit · photo stops",
-                  "Guide reads a brochure",
-                  "Sites visited, not read",
-                  "Crowded, transactional",
-                  "Surface devotion or souvenir hunting",
-                  "Generic vegetarian buffets",
-                ].map((x) => (
-                  <li key={x} className="border-b border-border/40 pb-3">
-                    — {x}
-                  </li>
+                {["Bus circuit · photo stops","Guide reads a brochure","Sites visited, not read","Crowded, transactional","Surface devotion or souvenir hunting","Generic vegetarian buffets"].map(x => (
+                  <li key={x} className="border-b border-border/40 pb-3">— {x}</li>
                 ))}
               </ul>
             </div>
             <div className="bg-card p-10">
               <span className="eyebrow text-gold">Bhumivox</span>
               <ul className="mt-6 space-y-4 text-sm text-ivory/90">
-                {[
-                  "Private vehicles · slow time on each site",
-                  "Historian leads · field-grade scholarship",
-                  "Sites read in layers — text, terrain, chronology",
-                  "Intimate parties · 8–14 travellers",
-                  "Civilizational understanding, not nostalgia",
-                  "Curated sattvik kitchens, premium comfort",
-                ].map((x) => (
-                  <li key={x} className="border-b border-border/40 pb-3">
-                    — {x}
-                  </li>
+                {["Private vehicles · slow time on each site","Historian leads · field-grade scholarship","Sites read in layers — text, terrain, chronology","Intimate parties · 8–14 travellers","Civilizational understanding, not nostalgia","Curated sattvik kitchens, premium comfort"].map(x => (
+                  <li key={x} className="border-b border-border/40 pb-3">— {x}</li>
                 ))}
               </ul>
             </div>
@@ -126,10 +100,7 @@ export default function WhyPage() {
             <div key={t} className="bg-background p-10">
               <h3 className="font-serif text-2xl text-ivory">{t}</h3>
               <p className="mt-3 text-sm text-muted-foreground">{d}</p>
-              <Link
-                to="/plan"
-                className="mt-8 inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.28em] text-primary link-underline"
-              >
+              <Link to="/plan" className="mt-8 inline-flex items-center gap-3 text-[0.7rem] uppercase tracking-[0.28em] text-primary link-underline">
                 Request Place <ArrowRight size={14} />
               </Link>
             </div>

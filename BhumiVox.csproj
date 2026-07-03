@@ -7,8 +7,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\assets\chandru-portrait-D6sRXz9t.jpg" />
+    <Content Remove="wwwroot\assets\hero-civilization-BwZ08ThU.jpg" />
+    <Content Remove="wwwroot\assets\index-CxjrVG7K.js" />
+    <Content Remove="wwwroot\assets\index-DWlXsZ09.css" />
+    <Content Remove="wwwroot\assets\intelligence-map-BI2cQgez.jpg" />
+    <Content Remove="wwwroot\assets\journey-ayodhya-CmTKmOYK.jpg" />
+    <Content Remove="wwwroot\assets\journey-braj-CN0LoRU6.jpg" />
+    <Content Remove="wwwroot\assets\journey-dwarka-D-UQfOH1.jpg" />
+    <Content Remove="wwwroot\assets\journey-kashi-pX9p2dUI.jpg" />
+    <Content Remove="wwwroot\assets\journey-kurukshetra-C_c755K0.jpg" />
+    <Content Remove="wwwroot\assets\journey-lanka-BeVYO7fC.jpg" />
+    <Content Remove="wwwroot\index.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Storage.Blobs" Version="12.27.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="MailKit" Version="4.14.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.23" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.21" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="8.0.27" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="6.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -17,7 +37,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\" />
+    <None Include="wwwroot\assets\chandru-portrait-D6sRXz9t.jpg" />
+    <None Include="wwwroot\assets\hero-civilization-BwZ08ThU.jpg" />
+    <None Include="wwwroot\assets\index-CxjrVG7K.js" />
+    <None Include="wwwroot\assets\index-DWlXsZ09.css" />
+    <None Include="wwwroot\assets\intelligence-map-BI2cQgez.jpg" />
+    <None Include="wwwroot\assets\journey-ayodhya-CmTKmOYK.jpg" />
+    <None Include="wwwroot\assets\journey-braj-CN0LoRU6.jpg" />
+    <None Include="wwwroot\assets\journey-dwarka-D-UQfOH1.jpg" />
+    <None Include="wwwroot\assets\journey-kashi-pX9p2dUI.jpg" />
+    <None Include="wwwroot\assets\journey-kurukshetra-C_c755K0.jpg" />
+    <None Include="wwwroot\assets\journey-lanka-BeVYO7fC.jpg" />
+    <None Include="wwwroot\index.html" />
   </ItemGroup>
 
 </Project>

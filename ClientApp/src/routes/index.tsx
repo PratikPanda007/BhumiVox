@@ -42,19 +42,19 @@ function HeroSection() {
         <div>
           <p className="eyebrow cine-rise">A Civilizational Travel House · Est. Bharat</p>
           <h1
-            className="cine-rise mt-8 max-w-3xl font-serif text-6xl leading-[0.98] text-balance text-ivory md:text-[5.5rem] lg:text-[6.5rem]"
+            className="cine-rise mt-8 max-w-3xl font-serif text-6xl leading-[0.98] text-balance text-white md:text-[5.5rem] lg:text-[6.5rem]"
             style={{ animationDelay: "0.05s" }}
           >
             Where Civilizations
             <span className="block italic text-primary">Come Alive.</span>
           </h1>
           <p
-            className="cine-rise mt-10 max-w-xl text-base leading-relaxed text-ivory/80 md:text-lg"
+            className="cine-rise mt-10 max-w-xl text-base leading-relaxed text-white/80 md:text-lg"
             style={{ animationDelay: "0.2s" }}
           >
-            Bhumivox crafts research-led journeys across sacred Bharat — read through archaeology,
-            sacred geography, and the slow intelligence of land. This is not tourism. This is
-            civilizational travel.
+            Bhumivox crafts research-led journeys across sacred Bharat — read through
+            archaeology, sacred geography, and the slow intelligence of land.
+            This is not tourism. This is civilizational travel.
           </p>
 
           <div
@@ -70,7 +70,7 @@ function HeroSection() {
             </Link>
             <Link
               to="/journeys"
-              className="link-underline text-[0.75rem] uppercase tracking-[0.32em] text-ivory"
+              className="link-underline text-[0.75rem] uppercase tracking-[0.32em] text-white"
             >
               Explore Journeys
             </Link>
@@ -78,7 +78,10 @@ function HeroSection() {
         </div>
 
         {/* Sacred geography panel */}
-        <aside className="cine-rise relative hidden lg:block" style={{ animationDelay: "0.5s" }}>
+        <aside
+          className="cine-rise relative hidden lg:block"
+          style={{ animationDelay: "0.5s" }}
+        >
           <div className="relative border border-border/60 bg-obsidian/40 p-6 backdrop-blur-sm">
             <div className="flex items-center justify-between border-b border-border/60 pb-3">
               <span className="eyebrow">Living Map · Bharat</span>
@@ -106,26 +109,10 @@ function HeroSection() {
 /* --------------------------- WHAT IS --------------------------- */
 function WhatIsSection() {
   const pillars = [
-    {
-      icon: ScrollText,
-      label: "Sacred Text",
-      copy: "Itihasa and Purana read on the ground they describe.",
-    },
-    {
-      icon: Layers,
-      label: "Archaeology",
-      copy: "Excavation reports, dated chronology, material culture.",
-    },
-    {
-      icon: MapPin,
-      label: "Geography",
-      copy: "Paleo-channels, tirthas, terrain — Bharat as one body.",
-    },
-    {
-      icon: Telescope,
-      label: "Intelligence",
-      copy: "LiDAR, GIS and satellite layered over living tradition.",
-    },
+    { icon: ScrollText, label: "Sacred Text",  copy: "Itihasa and Purana read on the ground they describe." },
+    { icon: Layers,     label: "Archaeology",  copy: "Excavation reports, dated chronology, material culture." },
+    { icon: MapPin,     label: "Geography",    copy: "Paleo-channels, tirthas, terrain — Bharat as one body." },
+    { icon: Telescope,  label: "Intelligence", copy: "LiDAR, GIS and satellite layered over living tradition." },
   ];
 
   return (
@@ -145,11 +132,7 @@ function WhatIsSection() {
         <div className="grid grid-cols-1 gap-px bg-border/60 sm:grid-cols-2">
           {pillars.map(({ icon: Icon, label, copy }) => (
             <div key={label} className="group bg-background p-8">
-              <Icon
-                className="text-primary transition-transform duration-700 group-hover:rotate-6"
-                size={28}
-                strokeWidth={1.25}
-              />
+              <Icon className="text-primary transition-transform duration-700 group-hover:rotate-6" size={28} strokeWidth={1.25} />
               <h3 className="mt-6 font-serif text-2xl text-ivory">{label}</h3>
               <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{copy}</p>
             </div>
@@ -175,10 +158,7 @@ function FeaturedJourneys() {
             </>
           }
         />
-        <Link
-          to="/journeys"
-          className="link-underline text-[0.7rem] uppercase tracking-[0.32em] text-ivory"
-        >
+        <Link to="/journeys" className="link-underline text-[0.7rem] uppercase tracking-[0.32em] text-ivory">
           All Journeys →
         </Link>
       </div>
@@ -206,7 +186,7 @@ function ChandruSection() {
           />
           <div className="absolute inset-0 bg-gradient-to-tr from-obsidian via-obsidian/40 to-transparent" />
           <div className="absolute bottom-8 left-8 max-w-xs border-l border-primary pl-5">
-            <p className="font-serif text-2xl italic text-ivory">
+            <p className="font-serif text-2xl italic text-white">
               "We don't visit a site. We listen to what it remembers."
             </p>
             <p className="mt-4 eyebrow">— Chandru Ramesh</p>
@@ -226,9 +206,10 @@ function ChandruSection() {
             <div className="hairline my-10" />
 
             <p className="text-base leading-relaxed text-ivory/85 md:text-lg">
-              Two decades in the field — from temple villages of Tamil Nadu to the paleo-channels of
-              the Saraswati — Chandru leads a small number of private and group journeys each year,
-              designed for travellers who want to understand Bharat, not merely photograph it.
+              Two decades in the field — from temple villages of Tamil Nadu to the
+              paleo-channels of the Saraswati — Chandru leads a small number of
+              private and group journeys each year, designed for travellers who want
+              to understand Bharat, not merely photograph it.
             </p>
 
             <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
@@ -271,9 +252,9 @@ function IntelligenceSection() {
             <span className="italic text-primary">read in layers.</span>
           </h2>
           <p className="mt-8 text-base leading-relaxed text-muted-foreground md:text-lg">
-            LiDAR. GIS. Drone-mapped sites. Satellite terrain. Sacred geography overlaid on
-            archaeological grids. Every Bhumivox journey is built on a research workspace most
-            travellers never see.
+            LiDAR. GIS. Drone-mapped sites. Satellite terrain. Sacred geography
+            overlaid on archaeological grids. Every Bhumivox journey is built on a
+            research workspace most travellers never see.
           </p>
           <div className="mt-10 space-y-5">
             {[
@@ -282,13 +263,8 @@ function IntelligenceSection() {
               ["Satellite", "Multispectral terrain analysis"],
               ["Field Archaeology", "Excavation chronology"],
             ].map(([k, v]) => (
-              <div
-                key={k}
-                className="flex items-baseline justify-between border-b border-border/60 pb-4"
-              >
-                <span className="font-mono text-xs uppercase tracking-[0.28em] text-primary">
-                  {k}
-                </span>
+              <div key={k} className="flex items-baseline justify-between border-b border-border/60 pb-4">
+                <span className="font-mono text-xs uppercase tracking-[0.28em] text-primary">{k}</span>
                 <span className="text-sm text-ivory/80">{v}</span>
               </div>
             ))}
@@ -322,15 +298,12 @@ function IntelligenceSection() {
 /* ----------------------- EXPERIENCE TYPES ----------------------- */
 function ExperienceTypes() {
   const types = [
-    { t: "Vaishnav Heritage", d: "Multi-generation pilgrimages with curatorial depth." },
-    { t: "Temple Trails", d: "Living temple culture across South & North." },
-    { t: "Archaeology Discovery", d: "Restricted-access digs with field archaeologists." },
+    { t: "Vaishnav Heritage",        d: "Multi-generation pilgrimages with curatorial depth." },
+    { t: "Temple Trails",            d: "Living temple culture across South & North." },
+    { t: "Archaeology Discovery",    d: "Restricted-access digs with field archaeologists." },
     { t: "Family Heritage Journeys", d: "Slow, premium itineraries for three generations." },
-    { t: "NRI Bharat Reconnection", d: "For those returning to a Bharat they half-remember." },
-    {
-      t: "Premium Vegetarian Travel",
-      d: "Strict sattvik kitchens, luxury comfort, no compromise.",
-    },
+    { t: "NRI Bharat Reconnection",  d: "For those returning to a Bharat they half-remember." },
+    { t: "Premium Vegetarian Travel",d: "Strict sattvik kitchens, luxury comfort, no compromise." },
   ];
 
   return (
@@ -347,10 +320,7 @@ function ExperienceTypes() {
         />
         <div className="mt-16 grid grid-cols-1 gap-px bg-border/60 md:grid-cols-2 lg:grid-cols-3">
           {types.map(({ t, d }, i) => (
-            <article
-              key={t}
-              className="group relative bg-obsidian p-10 transition-colors hover:bg-card"
-            >
+            <article key={t} className="group relative bg-obsidian p-10 transition-colors hover:bg-card">
               <Compass size={22} strokeWidth={1.25} className="text-primary" />
               <span className="absolute right-8 top-8 font-mono text-[0.65rem] tracking-[0.22em] text-muted-foreground">
                 {String(i + 1).padStart(2, "0")}
@@ -369,40 +339,22 @@ function ExperienceTypes() {
 /* ----------------------- JOURNAL PREVIEW ----------------------- */
 function JournalPreview() {
   const posts = [
-    {
-      tag: "Sacred Geography",
-      title: "The Forgotten Saraswati: tracing a river through satellite",
-      date: "Field Notes · 02",
-    },
-    {
-      tag: "Archaeology",
-      title: "What Dwarka's submerged stones still refuse to tell us",
-      date: "Field Notes · 07",
-    },
-    {
-      tag: "Founder's Notes",
-      title: "On listening to a temple before reading it",
-      date: "Field Notes · 11",
-    },
+    { tag: "Sacred Geography", title: "The Forgotten Saraswati: tracing a river through satellite",  date: "Field Notes · 02" },
+    { tag: "Archaeology",      title: "What Dwarka's submerged stones still refuse to tell us",       date: "Field Notes · 07" },
+    { tag: "Founder's Notes",  title: "On listening to a temple before reading it",                   date: "Field Notes · 11" },
   ];
 
   return (
     <Section>
       <div className="flex flex-wrap items-end justify-between gap-8">
         <SectionLabel eyebrow="The Journal" title="Long-form field writing." />
-        <Link
-          to="/journal"
-          className="link-underline text-[0.7rem] uppercase tracking-[0.32em] text-ivory"
-        >
+        <Link to="/journal" className="link-underline text-[0.7rem] uppercase tracking-[0.32em] text-ivory">
           Read the Journal →
         </Link>
       </div>
       <div className="mt-16 grid gap-px bg-border/60 md:grid-cols-3">
         {posts.map((p) => (
-          <article
-            key={p.title}
-            className="group cursor-pointer bg-background p-10 transition-colors hover:bg-card"
-          >
+          <article key={p.title} className="group cursor-pointer bg-background p-10 transition-colors hover:bg-card">
             <span className="eyebrow text-gold">{p.tag}</span>
             <h3 className="mt-8 font-serif text-3xl leading-tight text-ivory transition-colors group-hover:text-primary">
               {p.title}

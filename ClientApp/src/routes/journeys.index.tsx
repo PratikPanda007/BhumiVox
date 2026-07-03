@@ -49,7 +49,9 @@ export default function JourneysPage() {
   }, [active, query]);
 
   const upcoming = useMemo(() => {
-    return JOURNEYS.flatMap((j) => j.departures.map((d) => ({ journey: j, departure: d })))
+    return JOURNEYS.flatMap((j) =>
+      j.departures.map((d) => ({ journey: j, departure: d })),
+    )
       .sort((a, b) => a.departure.date.localeCompare(b.departure.date))
       .slice(0, 4);
   }, []);
@@ -196,7 +198,8 @@ export default function JourneysPage() {
                       className="h-full bg-primary transition-all"
                       style={{
                         width: `${
-                          ((departure.totalSeats - departure.seatsLeft) / departure.totalSeats) *
+                          ((departure.totalSeats - departure.seatsLeft) /
+                            departure.totalSeats) *
                           100
                         }%`,
                       }}
@@ -228,8 +231,12 @@ export default function JourneysPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
                 <span className="eyebrow text-gold">Travel with</span>
-                <p className="mt-2 font-serif text-3xl text-ivory">Chandru Ramesh</p>
-                <p className="mt-1 text-xs text-ivory/70">Historian & Lead Guide</p>
+                <p className="mt-2 font-serif text-3xl text-ivory">
+                  Chandru Ramesh
+                </p>
+                <p className="mt-1 text-xs text-ivory/70">
+                  Historian & Lead Guide
+                </p>
               </div>
             </div>
           </div>
@@ -318,14 +325,14 @@ export default function JourneysPage() {
             <div>
               <span className="eyebrow text-gold">Private Journeys</span>
               <h2 className="mt-4 font-serif text-3xl text-ivory md:text-5xl">
-                Designed in <span className="italic text-primary">thirty days</span>, walked at your
-                own pace.
+                Designed in <span className="italic text-primary">thirty days</span>,
+                walked at your own pace.
               </h2>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground">
-                Tell us where the land is calling you — a single temple, a circuit, or an arc across
-                regions. Our studio designs one-off, fully private civilizational journeys for
-                families, scholars and small parties, with a thirty-day design window and a
-                dedicated historian.
+                Tell us where the land is calling you — a single temple, a circuit,
+                or an arc across regions. Our studio designs one-off, fully private
+                civilizational journeys for families, scholars and small parties,
+                with a thirty-day design window and a dedicated historian.
               </p>
               <ul className="mt-6 grid grid-cols-1 gap-2 text-sm text-ivory/80 sm:grid-cols-2">
                 <li>· Dedicated scholar guide</li>

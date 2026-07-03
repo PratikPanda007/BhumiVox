@@ -15,8 +15,8 @@ export function SiteFooter() {
             Where civilizations come alive.
           </p>
           <p className="mt-8 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            Research-led journeys across sacred Bharat — combining sacred geography, archaeology,
-            and heritage intelligence into premium, deeply Indian travel.
+            Research-led journeys across sacred Bharat — combining sacred geography,
+            archaeology, and heritage intelligence into premium, deeply Indian travel.
           </p>
         </div>
 
@@ -58,14 +58,23 @@ export function SiteFooter() {
   );
 }
 
-function FooterCol({ title, links }: { title: string; links: { to: string; label: string }[] }) {
+function FooterCol({
+  title,
+  links,
+}: {
+  title: string;
+  links: { to: string; label: string }[];
+}) {
   return (
     <div>
       <h4 className="eyebrow">{title}</h4>
       <ul className="mt-5 space-y-3">
         {links.map((l) => (
           <li key={l.to}>
-            <Link to={l.to} className="text-sm text-ivory/80 transition-colors hover:text-primary">
+            <Link
+              to={l.to}
+              className="text-sm text-ivory/80 transition-colors hover:text-primary"
+            >
               {l.label}
             </Link>
           </li>

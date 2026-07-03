@@ -27,13 +27,15 @@ export function SiteHeader() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${
-        scrolled ? "bg-background/80 backdrop-blur-xl border-b border-border" : "bg-transparent"
+        scrolled
+          ? "bg-background/80 backdrop-blur-xl border-b border-border"
+          : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-5 lg:px-12">
         <Link to="/" className="group flex items-center gap-3">
           <span className="inline-block h-2 w-2 rounded-full bg-primary glow-bronze" />
-          <span className="font-serif text-xl tracking-wide text-ivory">
+          <span className={`font-serif text-xl tracking-wide ${scrolled ? "text-ivory" : "text-white"}`}>
             Bhumi<span className="text-primary">vox</span>
           </span>
         </Link>
@@ -44,8 +46,12 @@ export function SiteHeader() {
               key={n.to}
               to={n.to}
               className={({ isActive }) =>
-                `link-underline text-xs uppercase tracking-[0.22em] transition-colors hover:text-ivory ${
-                  isActive ? "text-ivory" : "text-muted-foreground"
+                `link-underline text-xs uppercase tracking-[0.22em] transition-colors ${
+                  scrolled
+                    ? isActive
+                      ? "text-ivory"
+                      : "text-muted-foreground hover:text-ivory"
+                    : "text-white/70 hover:text-white"
                 }`
               }
             >
@@ -57,7 +63,11 @@ export function SiteHeader() {
         <div className="flex items-center gap-3">
           <Link
             to="/plan"
-            className="hidden rounded-none border border-primary/60 px-5 py-2.5 text-[0.7rem] uppercase tracking-[0.28em] text-ivory transition-all hover:bg-primary hover:text-primary-foreground md:inline-block"
+            className={`hidden rounded-none border px-5 py-2.5 text-[0.7rem] uppercase tracking-[0.28em] md:inline-block transition-colors ${
+              scrolled
+                ? "border-primary/60 text-ivory hover:bg-primary hover:text-primary-foreground"
+                : "border-white/50 text-white hover:bg-white hover:text-foreground"
+            }`}
           >
             Plan Your Journey
           </Link>
@@ -65,7 +75,7 @@ export function SiteHeader() {
             type="button"
             aria-label="Toggle menu"
             onClick={() => setOpen((v) => !v)}
-            className="rounded-none border border-border p-2 text-ivory lg:hidden"
+            className={`rounded-none border p-2 lg:hidden ${scrolled ? "text-ivory border-border" : "text-white border-white/30"}`}
           >
             {open ? <X size={18} /> : <Menu size={18} />}
           </button>

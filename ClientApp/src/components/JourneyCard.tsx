@@ -28,16 +28,18 @@ export function JourneyCard({ j, large = false }: { j: Journey; large?: boolean 
       <div className="absolute inset-0 flex flex-col justify-between p-7">
         <div className="flex items-center justify-between">
           <span className="eyebrow text-gold">{j.region}</span>
-          <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-ivory/70">
+          <span className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-white/70">
             {j.duration}
           </span>
         </div>
         <div>
-          <h3 className="font-serif text-3xl text-ivory md:text-4xl">{j.title}</h3>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-ivory/75">{j.blurb}</p>
+          <h3 className="font-serif text-3xl text-white md:text-4xl">{j.title}</h3>
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-white/75">
+            {j.blurb}
+          </p>
           <div className="mt-6 flex items-center gap-3">
             <span className="h-px w-10 bg-primary transition-all duration-500 group-hover:w-20" />
-            <span className="text-[0.7rem] uppercase tracking-[0.28em] text-ivory">
+            <span className="text-[0.7rem] uppercase tracking-[0.28em] text-white">
               Explore Journey
             </span>
           </div>

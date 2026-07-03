@@ -15,11 +15,7 @@ export default function ContactPage() {
     <>
       <PageHero
         eyebrow="Contact the Studio"
-        title={
-          <>
-            Begin a <span className="italic text-primary">quiet conversation.</span>
-          </>
-        }
+        title={<>Begin a <span className="italic text-primary">quiet conversation.</span></>}
         intro="The best journeys begin not with a booking, but with a long talk about why."
         image={heroImg}
       />
@@ -78,9 +74,7 @@ export default function ContactPage() {
 function Field({ label, id, type = "text" }: { label: string; id: string; type?: string }) {
   return (
     <div>
-      <label htmlFor={id} className="eyebrow">
-        {label}
-      </label>
+      <label htmlFor={id} className="eyebrow">{label}</label>
       <input
         id={id}
         type={type}

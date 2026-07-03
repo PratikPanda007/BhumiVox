@@ -34,10 +34,9 @@ export default function DestinationDetailPage() {
   }
 
   const related = d.relatedJourneys.map(getJourney).filter(Boolean);
-  const others = DESTINATIONS.filter((o) => o.slug !== d.slug && o.circuit === d.circuit).slice(
-    0,
-    3,
-  );
+  const others = DESTINATIONS.filter(
+    (o) => o.slug !== d.slug && o.circuit === d.circuit,
+  ).slice(0, 3);
 
   return (
     <>

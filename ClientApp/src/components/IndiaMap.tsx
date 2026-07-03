@@ -5,18 +5,18 @@
  */
 export function IndiaMap({ className = "" }: { className?: string }) {
   const nodes = [
-    { id: "dwarka", x: 120, y: 280, label: "Dwarka" },
-    { id: "kurukshetra", x: 280, y: 200, label: "Kurukshetra" },
-    { id: "braj", x: 305, y: 250, label: "Braj" },
-    { id: "ayodhya", x: 360, y: 270, label: "Ayodhya" },
-    { id: "prayag", x: 380, y: 295, label: "Prayagraj" },
-    { id: "kashi", x: 410, y: 300, label: "Kashi" },
+    { id: "dwarka",     x: 120, y: 280, label: "Dwarka" },
+    { id: "kurukshetra",x: 280, y: 200, label: "Kurukshetra" },
+    { id: "braj",       x: 305, y: 250, label: "Braj" },
+    { id: "ayodhya",    x: 360, y: 270, label: "Ayodhya" },
+    { id: "prayag",     x: 380, y: 295, label: "Prayagraj" },
+    { id: "kashi",      x: 410, y: 300, label: "Kashi" },
     { id: "chitrakoot", x: 345, y: 320, label: "Chitrakoot" },
-    { id: "puri", x: 460, y: 380, label: "Puri" },
-    { id: "udupi", x: 260, y: 480, label: "Udupi" },
-    { id: "guruvayur", x: 290, y: 520, label: "Guruvayur" },
-    { id: "rameshwaram", x: 340, y: 555, label: "Rameshwaram" },
-    { id: "lanka", x: 370, y: 620, label: "Sri Lanka" },
+    { id: "puri",       x: 460, y: 380, label: "Puri" },
+    { id: "udupi",      x: 260, y: 480, label: "Udupi" },
+    { id: "guruvayur",  x: 290, y: 520, label: "Guruvayur" },
+    { id: "rameshwaram",x: 340, y: 555, label: "Rameshwaram" },
+    { id: "lanka",      x: 370, y: 620, label: "Sri Lanka" },
   ];
 
   const routes: [string, string][] = [
@@ -36,7 +36,11 @@ export function IndiaMap({ className = "" }: { className?: string }) {
   const byId = Object.fromEntries(nodes.map((n) => [n.id, n]));
 
   return (
-    <svg viewBox="0 0 600 720" className={className} aria-label="Sacred geography of Bharat">
+    <svg
+      viewBox="0 0 600 720"
+      className={className}
+      aria-label="Sacred geography of Bharat"
+    >
       <defs>
         <radialGradient id="bgGlow" cx="50%" cy="42%" r="55%">
           <stop offset="0%" stopColor="oklch(0.62 0.09 55)" stopOpacity="0.18" />

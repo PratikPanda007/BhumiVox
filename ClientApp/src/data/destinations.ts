@@ -193,7 +193,8 @@ export const DESTINATIONS: Destination[] = [
       "From Rameshwaram across the Palk Strait, the Ramayana opens into a second geography — Ashok Vatika, Ravana's caves, Sigiriya's hill citadel. Sri Lankan and Indian scholarship are only now meeting around this shared corridor.",
     geography:
       "An arc from the Setu coast through Sita Eliya (Nuwara Eliya hill country), Ella's cave systems, and the Sigiriya–Anuradhapura plain.",
-    bestTime: "December–March for the hill country; avoid the south-west monsoon (May–Sep).",
+    bestTime:
+      "December–March for the hill country; avoid the south-west monsoon (May–Sep).",
     highlights: [
       "Sita Eliya — the Ashok Vatika site",
       "Ravana caves at Ella",

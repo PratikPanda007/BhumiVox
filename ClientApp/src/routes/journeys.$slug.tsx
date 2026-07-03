@@ -64,21 +64,13 @@ function deriveFaq(j: JourneyDetail): { q: string; a: string }[] {
 function deriveRoute(j: JourneyDetail): string[] {
   if (j.routePoints?.length) return j.routePoints;
   // pick up to 5 short titles from itinerary
-  return j.itinerary
-    .slice(0, 5)
-    .map((d) => (d.title.length > 18 ? d.title.split(/[ —&]/)[0] : d.title));
+  return j.itinerary.slice(0, 5).map((d) =>
+    d.title.length > 18 ? d.title.split(/[ —&]/)[0] : d.title,
+  );
 }
 
 // ---------- subcomponents ----------
-function MetaIcon({
-  icon: Icon,
-  label,
-  value,
-}: {
-  icon: typeof Clock;
-  label: string;
-  value: string;
-}) {
+function MetaIcon({ icon: Icon, label, value }: { icon: typeof Clock; label: string; value: string }) {
   return (
     <div className="flex items-start gap-3 border-l border-border/60 pl-4">
       <Icon className="mt-1 h-4 w-4 text-primary" />
@@ -139,7 +131,9 @@ export default function JourneyDetailPage() {
     return (
       <div className="mx-auto max-w-xl px-6 py-40 text-center">
         <p className="eyebrow">Not Found</p>
-        <h1 className="mt-4 font-serif text-4xl text-ivory">This journey isn't published yet.</h1>
+        <h1 className="mt-4 font-serif text-4xl text-ivory">
+          This journey isn't published yet.
+        </h1>
         <Link
           to="/journeys"
           className="mt-6 inline-block text-sm uppercase tracking-[0.28em] text-primary"
@@ -157,9 +151,7 @@ export default function JourneyDetailPage() {
   const faq = deriveFaq(j);
   const route = deriveRoute(j);
   const groupSize = j.groupSize ?? `${j.departures[0]?.totalSeats ?? 12} guests max`;
-  const guideType = j.tags.includes("Chandru Ramesh-Led")
-    ? "Chandru Ramesh-Led"
-    : "Bhumivox Scholar-Guide";
+  const guideType = j.tags.includes("Chandru Ramesh-Led") ? "Chandru Ramesh-Led" : "Bhumivox Scholar-Guide";
   const priceFrom = j.departures[0]?.priceFrom ?? "On request";
 
   return (
@@ -268,12 +260,8 @@ export default function JourneyDetailPage() {
             <div className="border border-border/60 bg-card p-6">
               <p className="eyebrow">Your Guide</p>
               <h3 className="mt-3 font-serif text-2xl text-ivory">{j.guideInfo.name}</h3>
-              <p className="mt-1 text-xs uppercase tracking-[0.22em] text-gold">
-                {j.guideInfo.role}
-              </p>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                {j.guideInfo.bio}
-              </p>
+              <p className="mt-1 text-xs uppercase tracking-[0.22em] text-gold">{j.guideInfo.role}</p>
+              <p className="mt-4 text-sm leading-relaxed text-muted-foreground">{j.guideInfo.bio}</p>
             </div>
             <div className="border border-border/60 bg-card p-6">
               <p className="eyebrow">Stay</p>
@@ -289,10 +277,7 @@ export default function JourneyDetailPage() {
 
       {/* What makes this Bhumivox */}
       <Section className="!pt-0">
-        <SectionLabel
-          eyebrow="The Bhumivox Difference"
-          title={<>What makes this journey ours.</>}
-        />
+        <SectionLabel eyebrow="The Bhumivox Difference" title={<>What makes this journey ours.</>} />
         <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-3">
           {whyBhumivox.map((line, i) => (
             <div key={i} className="border-t border-primary/40 pt-6">
@@ -411,8 +396,7 @@ export default function JourneyDetailPage() {
             <p className="eyebrow">Investment</p>
             <p className="mt-3 font-serif text-4xl text-ivory">From {priceFrom}</p>
             <p className="mt-2 text-sm text-muted-foreground">
-              Per guest · twin sharing · all-inclusive of stay, meals, scholars and ground
-              operations.
+              Per guest · twin sharing · all-inclusive of stay, meals, scholars and ground operations.
             </p>
           </div>
           <div className="flex flex-wrap gap-3 md:justify-end">

@@ -26,12 +26,12 @@ export function PageHero({
       <div className="absolute inset-0 -z-10 grain" />
       <div className="mx-auto w-full max-w-[1400px] px-6 pb-24 pt-40 lg:px-12">
         <p className="eyebrow cine-rise">{eyebrow}</p>
-        <h1 className="cine-rise mt-6 max-w-4xl font-serif text-5xl leading-[1.05] text-balance text-ivory md:text-7xl lg:text-8xl">
+        <h1 className="cine-rise mt-6 max-w-4xl font-serif text-5xl leading-[1.05] text-balance text-white md:text-7xl lg:text-8xl">
           {title}
         </h1>
         {intro && (
           <p
-            className="cine-rise mt-8 max-w-2xl text-base leading-relaxed text-ivory/80 md:text-lg"
+            className="cine-rise mt-8 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg"
             style={{ animationDelay: "0.15s" }}
           >
             {intro}
