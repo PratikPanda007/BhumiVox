@@ -6,6 +6,8 @@ using BhumiVox.Models;
 using BhumiVox.Models.Auth;
 using BhumiVox.Models.Master;
 using BhumiVox.Models.Journey;
+using BhumiVox.Models.Payments;
+using BhumiVox.Models.Booking;
 
 namespace BhumiVox.Helper
 {
@@ -719,5 +721,211 @@ namespace BhumiVox.Helper
             return details;
         }
         // ================================================================================================= [ journey Slug Details Ends Here ]
+
+        // ================================================================================================= [ Payments Starts Here ]
+        public async Task<int> CreateBookingAsync(CreateBookingModel model)
+        {
+            using SqlConnection conn = new(_connectionString);
+
+            using SqlCommand cmd = new("bv_sp_CreateBooking", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@JourneyId", model.JourneyId);
+            cmd.Parameters.AddWithValue("@FullName", model.FullName);
+            cmd.Parameters.AddWithValue("@Email", model.Email);
+            cmd.Parameters.AddWithValue("@MobileNumber", model.MobileNumber);
+            cmd.Parameters.AddWithValue("@Country", (object?)model.Country ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@City", (object?)model.City ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@Adults", model.Adults);
+            cmd.Parameters.AddWithValue("@Children", model.Children);
+            cmd.Parameters.AddWithValue("@PreferredDepartureDate", (object?)model.PreferredDepartureDate ?? DBNull.Value);
+            cmd.Parameters.AddWithValue("@SpecialRequirements", (object?)model.SpecialRequirements ?? DBNull.Value);
+
+            await conn.OpenAsync();
+
+            return Convert.ToInt32(await cmd.ExecuteScalarAsync());
+        }
+        // ================================================================================================= [ Payments End Here ]
+
+        // ================================================================================================= [ Booking List for Admin Starts Here ]
+        public async Task<List<BookingListModel>> GetAllBookingsAsync()
+        {
+            List<BookingListModel> bookings = new();
+
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = new("bv_sp_GetAllBookings", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            await conn.OpenAsync();
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                bookings.Add(new BookingListModel
+                {
+                    BookingId = Convert.ToInt32(reader["BookingId"]),
+                    BookingGuid = Guid.Parse(reader["BookingGuid"].ToString()!),
+                    JourneyName = reader["JourneyName"].ToString()!,
+                    FullName = reader["FullName"].ToString()!,
+                    Email = reader["Email"].ToString()!,
+                    MobileNumber = reader["MobileNumber"].ToString()!,
+                    Country = reader["Country"].ToString()!,
+                    City = reader["City"].ToString()!,
+                    Adults = Convert.ToInt32(reader["Adults"]),
+                    Children = Convert.ToInt32(reader["Children"]),
+                    PreferredDepartureDate = Convert.ToDateTime(reader["PreferredDepartureDate"]),
+                    BookingStatus = reader["BookingStatus"].ToString()!,
+                    Amount = reader["Amount"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["Amount"]),
+                    PaymentStatus = reader["PaymentStatus"].ToString()!,
+                    CreatedOn = Convert.ToDateTime(reader["CreatedOn"])
+                });
+            }
+
+            return bookings;
+        }
+        // ================================================================================================= [ Booking List for Admin Ends Here ]
+
+        // ================================================================================================= [ Create Booking Starts Here ]
+        public async Task<int> CreateBookingAsync(BookingCreateModel model)
+        {
+            using SqlConnection conn = new(_connectionString);
+
+            using SqlCommand cmd = new("bv_sp_CreateBooking", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@JourneyId", model.JourneyId);
+            cmd.Parameters.AddWithValue("@FullName", model.FullName);
+            cmd.Parameters.AddWithValue("@Email", model.Email);
+            cmd.Parameters.AddWithValue("@MobileNumber", model.MobileNumber);
+            cmd.Parameters.AddWithValue("@Country", model.Country);
+            cmd.Parameters.AddWithValue("@City", model.City);
+            cmd.Parameters.AddWithValue("@Adults", model.Adults);
+            cmd.Parameters.AddWithValue("@Children", model.Children);
+            cmd.Parameters.AddWithValue("@PreferredDepartureDate", model.PreferredDepartureDate);
+
+            cmd.Parameters.AddWithValue(
+                "@SpecialRequirements",
+                string.IsNullOrWhiteSpace(model.SpecialRequirements)
+                    ? DBNull.Value
+                    : model.SpecialRequirements
+            );
+
+            await conn.OpenAsync();
+
+            return Convert.ToInt32(await cmd.ExecuteScalarAsync());
+        }
+        // ================================================================================================= [ Create Booking Ends Here ]
+
+        // ================================================================================================= [ Payment Process Starts Here ]
+        public async Task<BookingModel?> GetBookingByIdAsync(int bookingId)
+        {
+            BookingModel? booking = null;
+
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = new("bv_sp_GetBookingById", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@BookingId", bookingId);
+
+            await conn.OpenAsync();
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                booking = new BookingModel
+                {
+                    BookingId = Convert.ToInt32(reader["BookingId"]),
+                    BookingGuid = Guid.Parse(reader["BookingGuid"].ToString()!),
+
+                    JourneyId = Convert.ToInt32(reader["JourneyId"]),
+                    JourneyName = reader["JourneyName"].ToString()!,
+
+                    FullName = reader["FullName"].ToString()!,
+                    Email = reader["Email"].ToString()!,
+                    MobileNumber = reader["MobileNumber"].ToString()!,
+
+                    Country = reader["Country"].ToString()!,
+                    City = reader["City"].ToString()!,
+
+                    Adults = Convert.ToInt32(reader["Adults"]),
+                    Children = Convert.ToInt32(reader["Children"]),
+
+                    PreferredDepartureDate =
+                        Convert.ToDateTime(reader["PreferredDepartureDate"]),
+
+                    SpecialRequirements =
+                        reader["SpecialRequirements"]?.ToString(),
+
+                    BookingStatus = reader["BookingStatus"].ToString()!,
+                    PaymentStatus = reader["PaymentStatus"].ToString()!,
+
+                    Amount = Convert.ToDecimal(reader["Amount"]),
+
+                    PaymentLink =
+                        reader["PaymentLink"] == DBNull.Value
+                            ? null
+                            : reader["PaymentLink"].ToString(),
+
+                    CreatedOn =
+                        Convert.ToDateTime(reader["CreatedOn"])
+                };
+            }
+
+            return booking;
+        }
+
+        public async Task<string> GeneratePaymentLinkAsync(int bookingId)
+        {
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = new("bv_sp_GeneratePaymentLink", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@BookingId", bookingId);
+
+            await conn.OpenAsync();
+
+            object? result = await cmd.ExecuteScalarAsync();
+
+            if (result == null || result == DBNull.Value)
+                throw new Exception("Unable to generate payment link.");
+
+            return result.ToString()!;
+        }
+
+        public async Task MarkBookingPaidAsync(int bookingId)
+        {
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = new("bv_sp_MarkBookingPaid", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@BookingId", bookingId);
+
+            await conn.OpenAsync();
+            await cmd.ExecuteNonQueryAsync();
+        }
+
+        public async Task<string?> GetPaymentLinkAsync(int bookingId)
+        {
+            using SqlConnection conn = new(_connectionString);
+            using SqlCommand cmd = new("bv_sp_GetPaymentLink", conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@BookingId", bookingId);
+
+            await conn.OpenAsync();
+
+            object? result = await cmd.ExecuteScalarAsync();
+
+            if (result == null || result == DBNull.Value)
+                return null;
+
+            return result.ToString();
+        }
+        // ================================================================================================= [ Payment Process Ends Here ]
     }
 }

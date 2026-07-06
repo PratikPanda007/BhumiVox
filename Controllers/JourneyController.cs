@@ -1,4 +1,5 @@
 ﻿using BhumiVox.Helper;
+using BhumiVox.Models.Payments;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -58,6 +59,30 @@ namespace BhumiVox.Controllers
                 }
 
                 return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("Book")]
+        [AllowAnonymous]
+        public async Task<IActionResult> BookJourney(CreateBookingModel model)
+        {
+            try
+            {
+                int bookingId = await _db.CreateBookingAsync(model);
+
+                return Ok(new
+                {
+                    success = true,
+                    bookingId
+                });
             }
             catch (Exception ex)
             {

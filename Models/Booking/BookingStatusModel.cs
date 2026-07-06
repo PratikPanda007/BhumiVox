@@ -1,4 +1,4 @@
-﻿namespace BhumiVox.Models.Master
+﻿namespace BhumiVox.Models.Booking
 {
     public class BookingStatusModel
     {

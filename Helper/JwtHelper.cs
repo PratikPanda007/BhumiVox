@@ -32,7 +32,7 @@ namespace BhumiVox.Helper
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserGuid.ToString()),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.RoleName),
+                new Claim(ClaimTypes.Role, user.RoleId.ToString()),
                 new Claim("RoleId", user.RoleId.ToString())
             };
 
