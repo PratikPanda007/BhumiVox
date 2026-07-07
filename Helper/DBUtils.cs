@@ -8,16 +8,19 @@ using BhumiVox.Models.Master;
 using BhumiVox.Models.Journey;
 using BhumiVox.Models.Payments;
 using BhumiVox.Models.Booking;
+using BhumiVox.Services;
 
 namespace BhumiVox.Helper
 {
     public class DBUtils
     {
         private readonly string _connectionString;
+        private readonly RazorpayService _razorpayService;
 
-        public DBUtils(IConfiguration configuration)
+        public DBUtils(IConfiguration configuration, RazorpayService razorpayService)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _razorpayService = razorpayService;
         }
 
         private SqlConnection GetConnection()
@@ -879,22 +882,127 @@ namespace BhumiVox.Helper
             return booking;
         }
 
-        public async Task<string> GeneratePaymentLinkAsync(int bookingId)
+        public async Task<object> GeneratePaymentLinkAsync(int bookingId)
         {
             using SqlConnection conn = new(_connectionString);
-            using SqlCommand cmd = new("bv_sp_GeneratePaymentLink", conn);
-
-            cmd.CommandType = CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@BookingId", bookingId);
 
             await conn.OpenAsync();
 
-            object? result = await cmd.ExecuteScalarAsync();
+            using SqlCommand cmd = new("bv_sp_GetBookingForPaymentLink", conn);
 
-            if (result == null || result == DBNull.Value)
-                throw new Exception("Unable to generate payment link.");
+            cmd.CommandType = CommandType.StoredProcedure;
 
-            return result.ToString()!;
+            cmd.Parameters.AddWithValue("@BookingId", bookingId);
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            if (!await reader.ReadAsync())
+                throw new Exception("Booking not found.");
+
+            string customerName = reader["FullName"].ToString()!;
+            string email = reader["Email"].ToString()!;
+            string mobile = reader["MobileNumber"].ToString()!;
+            string journeyName = reader["JourneyName"].ToString()!;
+
+            decimal amount = Convert.ToDecimal(reader["Amount"]);
+
+            await reader.CloseAsync();
+
+            //------------------------------------------
+            // Call Razorpay
+            //------------------------------------------
+
+            var request = new RazorpayPaymentLinkRequest
+            {
+                amount = (int)(amount * 100), // Razorpay expects amount in paise
+                currency = "INR",
+                reference_id = $"BV{bookingId:000000}",
+                description = journeyName,
+
+                customer = new Customer
+                {
+                    name = customerName,
+                    email = email,
+                    contact = mobile
+                },
+
+                notify = new Notify
+                {
+                    sms = true,
+                    email = true
+                },
+
+                reminder_enable = true
+            };
+
+            var razorpay = await _razorpayService.CreatePaymentLinkAsync(request);
+
+            //------------------------------------------
+            // Save Payment Link
+            //------------------------------------------
+
+            using SqlCommand saveCmd = new("bv_sp_SavePaymentLink", conn);
+
+            saveCmd.CommandType = CommandType.StoredProcedure;
+
+            saveCmd.Parameters.AddWithValue("@BookingId", bookingId);
+
+            saveCmd.Parameters.AddWithValue(
+                "@RazorpayPaymentLinkId",
+                razorpay.id
+            );
+
+            saveCmd.Parameters.AddWithValue(
+                "@RazorpayShortUrl",
+                razorpay.short_url
+            );
+
+            saveCmd.Parameters.AddWithValue(
+                "@Amount",
+                amount
+            );
+
+            saveCmd.Parameters.AddWithValue(
+                "@Currency",
+                razorpay.currency
+            );
+
+            saveCmd.Parameters.AddWithValue(
+                "@LinkStatus",
+                razorpay.status
+            );
+
+            if (razorpay.expire_by > 0)
+            {
+                saveCmd.Parameters.AddWithValue(
+                    "@ExpireBy",
+                    DateTimeOffset
+                        .FromUnixTimeSeconds(razorpay.expire_by)
+                        .DateTime
+                );
+            }
+            else
+            {
+                saveCmd.Parameters.AddWithValue(
+                    "@ExpireBy",
+                    DBNull.Value
+                );
+            }
+
+            await saveCmd.ExecuteNonQueryAsync();
+
+            //------------------------------------------
+            // Return to Controller
+            //------------------------------------------
+
+            return new
+            {
+                RazorpayPaymentLinkId = razorpay.id,
+                RazorpayShortUrl = razorpay.short_url,
+                Currency = razorpay.currency,
+                Amount = amount,
+                Status = razorpay.status
+            };
         }
 
         public async Task MarkBookingPaidAsync(int bookingId)

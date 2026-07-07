@@ -28,6 +28,8 @@ builder.Services.AddScoped<JwtHelper>();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 
+builder.Services.AddHttpClient<RazorpayService>();
+
 // ===================== SWAGGER =====================
 
 builder.Services.AddSwaggerGen(c =>
