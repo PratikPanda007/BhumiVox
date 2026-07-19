@@ -39,11 +39,26 @@ namespace BhumiVox.Services
                     "application/json"
                 );
 
-            var response =
-                await _httpClient.PostAsync(
-                    "payment_links",
-                    content
+            Console.WriteLine("Headers:");
+            Console.WriteLine(_httpClient.DefaultRequestHeaders.Authorization);
+
+            var requestMessage = new HttpRequestMessage(
+                HttpMethod.Post,
+                "payment_links"
+            );
+
+            requestMessage.Content = content;
+
+            var auth =
+                Convert.ToBase64String(
+                    Encoding.ASCII.GetBytes($"{_keyId}:{_keySecret}")
                 );
+
+            requestMessage.Headers.Authorization =
+                new AuthenticationHeaderValue("Basic", auth);
+
+            var response =
+                await _httpClient.SendAsync(requestMessage);
 
             var body =
                 await response.Content.ReadAsStringAsync();
