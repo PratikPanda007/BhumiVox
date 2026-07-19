@@ -752,9 +752,9 @@ namespace BhumiVox.Helper
         // ================================================================================================= [ Payments End Here ]
 
         // ================================================================================================= [ Booking List for Admin Starts Here ]
-        public async Task<List<BookingListModel>> GetAllBookingsAsync()
+        public async Task<List<BookingListAdminModel>> GetAllBookingsAsync()
         {
-            List<BookingListModel> bookings = new();
+            List<BookingListAdminModel> bookings = new();
 
             using SqlConnection conn = new(_connectionString);
             using SqlCommand cmd = new("bv_sp_GetAllBookings", conn);
@@ -767,22 +767,56 @@ namespace BhumiVox.Helper
 
             while (await reader.ReadAsync())
             {
-                bookings.Add(new BookingListModel
+                bookings.Add(new BookingListAdminModel
                 {
+                    BookingGroupId = Convert.ToInt32(reader["BookingGroupId"]),
+                    BookingGroupGuid = Guid.Parse(reader["BookingGroupGuid"].ToString()!),
+
                     BookingId = Convert.ToInt32(reader["BookingId"]),
                     BookingGuid = Guid.Parse(reader["BookingGuid"].ToString()!),
+
                     JourneyName = reader["JourneyName"].ToString()!,
+
                     FullName = reader["FullName"].ToString()!,
+
                     Email = reader["Email"].ToString()!,
+
                     MobileNumber = reader["MobileNumber"].ToString()!,
+
                     Country = reader["Country"].ToString()!,
+
                     City = reader["City"].ToString()!,
+
                     Adults = Convert.ToInt32(reader["Adults"]),
+
                     Children = Convert.ToInt32(reader["Children"]),
+
                     PreferredDepartureDate = Convert.ToDateTime(reader["PreferredDepartureDate"]),
+
+                    SpecialRequirements = reader["SpecialRequirements"]?.ToString(),
+
+                    Amount = reader["Amount"] == DBNull.Value
+                ? 0
+                : Convert.ToDecimal(reader["Amount"]),
+
+                    Currency = reader["Currency"]?.ToString() ?? "",
+
                     BookingStatus = reader["BookingStatus"].ToString()!,
-                    Amount = reader["Amount"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["Amount"]),
+
                     PaymentStatus = reader["PaymentStatus"].ToString()!,
+
+                    RazorpayPaymentLinkId = reader["RazorpayPaymentLinkId"]?.ToString(),
+
+                    RazorpayShortUrl = reader["RazorpayShortUrl"]?.ToString(),
+
+                    PaymentMethod = reader["PaymentMethod"] == DBNull.Value
+                        ? null
+                        : reader["PaymentMethod"].ToString(),
+
+                    PaidOn = reader["PaidOn"] == DBNull.Value
+                    ? null
+                    : Convert.ToDateTime(reader["PaidOn"]),
+
                     CreatedOn = Convert.ToDateTime(reader["CreatedOn"])
                 });
             }
@@ -800,7 +834,11 @@ namespace BhumiVox.Helper
 
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@JourneyId", model.JourneyId);
+            //cmd.Parameters.AddWithValue("@JourneyId", model.JourneyId);
+            cmd.Parameters.AddWithValue(
+                "@JourneyIds",
+                string.Join(",", model.JourneyId)
+            );
             cmd.Parameters.AddWithValue("@FullName", model.FullName);
             cmd.Parameters.AddWithValue("@Email", model.Email);
             cmd.Parameters.AddWithValue("@MobileNumber", model.MobileNumber);
@@ -822,6 +860,83 @@ namespace BhumiVox.Helper
             return Convert.ToInt32(await cmd.ExecuteScalarAsync());
         }
         // ================================================================================================= [ Create Booking Ends Here ]
+
+        // ================================================================================================= [ My Booking List Starts Here ]
+        public async Task<List<MyBookingModel>> GetBookingsByEmailAsync(string email)
+        {
+            List<MyBookingModel> bookings = new();
+
+            using SqlConnection con = new SqlConnection(_connectionString);
+
+            using SqlCommand cmd = new SqlCommand(
+                "bv_sp_GetBookingsByEmail",
+                con);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@Email", email);
+
+            await con.OpenAsync();
+
+            using SqlDataReader reader = await cmd.ExecuteReaderAsync();
+
+            while (await reader.ReadAsync())
+            {
+                bookings.Add(new MyBookingModel
+                {
+                    BookingGroupId = Convert.ToInt32(reader["BookingGroupId"]),
+                    BookingGroupGuid = Guid.Parse(reader["BookingGroupGuid"].ToString()!),
+                    BookingId = Convert.ToInt32(reader["BookingId"]),
+                    BookingGuid = Guid.Parse(reader["BookingGuid"].ToString()!),
+
+                    JourneyName = reader["JourneyName"].ToString()!,
+
+                    FullName = reader["FullName"].ToString()!,
+                    Email = reader["Email"].ToString()!,
+                    MobileNumber = reader["MobileNumber"].ToString()!,
+
+                    Country = reader["Country"].ToString()!,
+                    City = reader["City"].ToString()!,
+
+                    Adults = Convert.ToInt32(reader["Adults"]),
+                    Children = Convert.ToInt32(reader["Children"]),
+
+                    PreferredDepartureDate =
+                        Convert.ToDateTime(reader["PreferredDepartureDate"]),
+
+                    SpecialRequirements =
+                        reader["SpecialRequirements"]?.ToString(),
+
+                    Amount =
+                        Convert.ToDecimal(reader["Amount"]),
+
+                    Currency =
+                        reader["Currency"].ToString()!,
+
+                    BookingStatus =
+                        reader["BookingStatus"].ToString()!,
+
+                    PaymentStatus =
+                        reader["PaymentStatus"].ToString()!,
+
+                    RazorpayPaymentLinkId =
+                        reader["RazorpayPaymentLinkId"] == DBNull.Value
+                            ? null
+                            : reader["RazorpayPaymentLinkId"].ToString(),
+
+                    RazorpayShortUrl =
+                        reader["RazorpayShortUrl"] == DBNull.Value
+                            ? null
+                            : reader["RazorpayShortUrl"].ToString(),
+
+                    CreatedOn =
+                        Convert.ToDateTime(reader["CreatedOn"])
+                });
+            }
+
+            return bookings;
+        }
+        // ================================================================================================= [ My Booking List Ends Here ]
 
         // ================================================================================================= [ Payment Process Starts Here ]
         public async Task<BookingModel?> GetBookingByIdAsync(int bookingId)
@@ -882,7 +997,7 @@ namespace BhumiVox.Helper
             return booking;
         }
 
-        public async Task<object> GeneratePaymentLinkAsync(int bookingId)
+        public async Task<object> GeneratePaymentLinkAsync(int bookingId, decimal amount)
         {
             using SqlConnection conn = new(_connectionString);
 
@@ -904,9 +1019,16 @@ namespace BhumiVox.Helper
             string mobile = reader["MobileNumber"].ToString()!;
             string journeyName = reader["JourneyName"].ToString()!;
 
-            decimal amount = Convert.ToDecimal(reader["Amount"]);
+            //decimal amount = Convert.ToDecimal(reader["Amount"]);
 
             await reader.CloseAsync();
+
+            using SqlCommand updateCmd = new SqlCommand(@"UPDATE bv_Bookings SET Amount = @Amount WHERE BookingId = @BookingId", conn);
+
+            updateCmd.Parameters.AddWithValue("@BookingId", bookingId);
+            updateCmd.Parameters.AddWithValue("@Amount", amount);
+
+            await updateCmd.ExecuteNonQueryAsync();
 
             //------------------------------------------
             // Call Razorpay
@@ -916,7 +1038,7 @@ namespace BhumiVox.Helper
             {
                 amount = (int)(amount * 100), // Razorpay expects amount in paise
                 currency = "INR",
-                reference_id = $"BV{bookingId:000000}",
+                reference_id = $"BV_{bookingId}_{DateTime.UtcNow:yyyyMMddHHmmss}",
                 description = journeyName,
 
                 customer = new Customer
@@ -1035,5 +1157,40 @@ namespace BhumiVox.Helper
             return result.ToString();
         }
         // ================================================================================================= [ Payment Process Ends Here ]
+
+        // ================================================================================================= [ Payment Stats Starts Here ]
+        public async Task SaveSuccessfulPaymentAsync(string razorpayPaymentLinkId, string razorpayPaymentId, string razorpayOrderId, decimal amountPaid, 
+            string paymentStatus, string paymentMethod, string razorpayResponse)
+        {
+            try
+            {
+                Console.WriteLine("SP Started");
+
+                using SqlConnection conn = new(_connectionString);
+
+                using SqlCommand cmd =
+                    new("bv_sp_SaveSuccessfulPayment", conn);
+
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                cmd.Parameters.AddWithValue("@RazorpayPaymentLinkId", razorpayPaymentLinkId);
+                cmd.Parameters.AddWithValue("@RazorpayPaymentId", razorpayPaymentId);
+                cmd.Parameters.AddWithValue("@RazorpayOrderId", razorpayOrderId);
+                cmd.Parameters.AddWithValue("@AmountPaid", amountPaid);
+                cmd.Parameters.AddWithValue("@PaymentStatus", paymentStatus);
+                cmd.Parameters.AddWithValue("@PaymentMethod", paymentMethod);
+                cmd.Parameters.AddWithValue("@RazorpayResponse", razorpayResponse);
+
+                await conn.OpenAsync();
+
+                await cmd.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                throw;
+            }
+        }
+        // ================================================================================================= [ Payment Stats Ends Here ]
     }
 }

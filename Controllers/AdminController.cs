@@ -1,4 +1,5 @@
 ﻿using BhumiVox.Helper;
+using BhumiVox.Models.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace BhumiVox.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "1,2")]
+    [Authorize(Roles = "1,2")]
     public class AdminController : ControllerBase
     {
         private readonly DBUtils _db;
@@ -73,11 +74,11 @@ namespace BhumiVox.Controllers
         }
 
         [HttpPost("Bookings/{bookingId}/GeneratePaymentLink")]
-        public async Task<IActionResult> GeneratePaymentLink(int bookingId)
+        public async Task<IActionResult> GeneratePaymentLink(int bookingId, [FromBody] GeneratePaymentLinkRequest request)
         {
             try
             {
-                var result = await _db.GeneratePaymentLinkAsync(bookingId);
+                var result = await _db.GeneratePaymentLinkAsync(bookingId, request.Amount);
 
                 return Ok(new
                 {
