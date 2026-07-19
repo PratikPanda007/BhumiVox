@@ -3,6 +3,7 @@ using BhumiVox.Models.Booking;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace BhumiVox.Controllers
 {
@@ -31,6 +32,36 @@ namespace BhumiVox.Controllers
                     success = true,
                     bookingId,
                     message = "Booking created successfully."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
+
+        [HttpGet("MyBookings")]
+        public async Task<IActionResult> MyBookings()
+        {
+            try
+            {
+                var email = User.FindFirstValue(ClaimTypes.Email);
+
+                if (string.IsNullOrWhiteSpace(email))
+                {
+                    return Unauthorized();
+                }
+
+                var result = await _db.GetBookingsByEmailAsync(email);
+
+                return Ok(new
+                {
+                    success = true,
+                    data = result
                 });
             }
             catch (Exception ex)
