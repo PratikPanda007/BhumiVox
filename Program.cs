@@ -64,6 +64,27 @@ builder.Services.AddSwaggerGen(c =>
 
 // ===================== AUTH =====================
 
+//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+//.AddJwtBearer(options =>
+//{
+//    options.RequireHttpsMetadata = false;
+//    options.SaveToken = true;
+
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidateAudience = true,
+//        ValidateLifetime = true,
+//        ValidateIssuerSigningKey = true,
+
+//        ValidIssuer = jwtSection["Issuer"],
+//        ValidAudience = jwtSection["Audience"],
+//        IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
+
+//        ClockSkew = TimeSpan.Zero // 🔥 important
+//    };
+//});
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
@@ -81,7 +102,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         ValidAudience = jwtSection["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
 
-        ClockSkew = TimeSpan.Zero // 🔥 important
+        ClockSkew = TimeSpan.Zero
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("AUTH FAILED:");
+            Console.WriteLine(context.Exception.ToString());
+            return Task.CompletedTask;
+        },
+
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine("TOKEN VALID");
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -98,6 +135,9 @@ builder.Services.AddCors(o =>
 );
 
 // ===================== APP =====================
+
+// Author: Pratik Kumar Panda
+// Date of Creation: 29th May 2026
 
 var app = builder.Build();
 
